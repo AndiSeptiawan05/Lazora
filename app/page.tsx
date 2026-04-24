@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Lock, ArrowRight, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -11,9 +12,26 @@ export default function LoginPage() {
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/dashboard');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        localStorage.setItem('username', username);
+        toast.success('Login successful!');
+        router.push('/dashboard');
+      } else {
+        toast.error(data.message || 'Login failed');
+      }
+    } catch (error) {
+      toast.error('An error occurred during login');
+    }
   };
 
   useEffect(() => {
@@ -125,16 +143,8 @@ export default function LoginPage() {
 
         </form>
 
-        {/* Footer */}
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-semibold text-gray-900 hover:underline dark:text-[#f8f9fa]">
-              Sign up
-            </Link>
-          </p>
-        </div>
       </div>
+      <Toaster position="top-right" />
     </div>
   );
 }

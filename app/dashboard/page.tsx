@@ -7,6 +7,7 @@ import Chat from '../../components/Chat'
 import JpgToPdf from '../../components/JpgToPdf'
 import MergeCvDocuments from '../../components/Merge'
 import { FileText } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const cvParticles = [
   { left: '10%', duration: 15, delay: 0, size: 32 },
@@ -23,6 +24,7 @@ const cvParticles = [
 
 export default function HomePage() {
   const [darkMode, setDarkMode] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -35,7 +37,12 @@ export default function HomePage() {
     } else {
       document.documentElement.classList.remove('dark')
     }
-  }, [])
+    
+    const user = localStorage.getItem('username')
+    if (!user) {
+      router.push('/')
+    }
+  }, [router])
 
   useEffect(() => {
     if (darkMode) {
