@@ -115,7 +115,7 @@ export default function MergeCvDocuments() {
         throw new Error('Gagal membuat PDF gabungan.')
       }
 
-      const blob = new Blob([bestBytes], { type: 'application/pdf' })
+      const blob = new Blob([bestBytes as any], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url

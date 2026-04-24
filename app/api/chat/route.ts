@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const pdfParse = require('pdf-parse')
+import pdfParse from 'pdf-parse'
 
 const client = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
