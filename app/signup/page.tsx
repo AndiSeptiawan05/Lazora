@@ -5,14 +5,15 @@ import { User, Lock, ArrowRight, Sun, Moon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    // Simulate sign up and route to dashboard
     router.push('/dashboard');
   };
 
@@ -57,15 +58,15 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-[#f8f9fa] tracking-tight">
-            Welcome back
+            Create an account
           </h1>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Please enter your details to sign in.
+            Sign up to get started.
           </p>
         </div>
 
         {/* Form */}
-        <form className="space-y-6" onSubmit={handleLogin}>
+        <form className="space-y-6" onSubmit={handleSignup}>
 
           {/* Username Input */}
           <div className="space-y-2">
@@ -81,7 +82,7 @@ export default function LoginPage() {
                 type="text"
                 required
                 className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
-                placeholder="Enter your username"
+                placeholder="Choose a username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -90,14 +91,9 @@ export default function LoginPage() {
 
           {/* Password Input */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-900 dark:text-[#f8f9fa]" htmlFor="password">
-                Password
-              </label>
-              <Link href="#" className="text-sm font-medium text-[#4da6ff] hover:text-[#3399ff] dark:text-[#66b3ff] dark:hover:text-[#80bfff] transition-colors">
-                Forgot Password?
-              </Link>
-            </div>
+            <label className="block text-sm font-medium text-gray-900 dark:text-[#f8f9fa]" htmlFor="password">
+              Password
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-gray-400 dark:text-gray-500" />
@@ -107,7 +103,7 @@ export default function LoginPage() {
                 type="password"
                 required
                 className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
-                placeholder="••••••••"
+                placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -119,7 +115,7 @@ export default function LoginPage() {
             type="submit"
             className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-bold text-white bg-[#dc2626] hover:bg-[#b91c1c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#dc2626] transition-all dark:focus:ring-offset-[#2c2d30] mt-2"
           >
-            Sign In
+            Sign Up
             <ArrowRight className="h-5 w-5" />
           </button>
 
@@ -128,9 +124,9 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-8 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-semibold text-gray-900 hover:underline dark:text-[#f8f9fa]">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/" className="font-semibold text-gray-900 hover:underline dark:text-[#f8f9fa]">
+              Sign in
             </Link>
           </p>
         </div>
