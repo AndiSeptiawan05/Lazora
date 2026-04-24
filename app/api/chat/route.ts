@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
-import pdfParse from 'pdf-parse'
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pdfParse = require('pdf-parse')
 
 const client = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
@@ -10,7 +12,7 @@ const client = new OpenAI({
 function getSystemPrompt(mode: string) {
   switch (mode) {
     case 'ats':
-  return `
+      return `
 Kamu adalah spesialis ATS, HR recruiter senior, dan penulis CV profesional.
 
 TUJUAN:
@@ -212,13 +214,13 @@ ${text}
       ...messages,
       ...(extractedText
         ? [
-            {
-              role: 'user' as const,
-              content:
-                'Gunakan dokumen berikut sebagai referensi utama:\n' +
-                extractedText,
-            },
-          ]
+          {
+            role: 'user' as const,
+            content:
+              'Gunakan dokumen berikut sebagai referensi utama:\n' +
+              extractedText,
+          },
+        ]
         : []),
     ]
 
