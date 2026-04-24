@@ -33,39 +33,43 @@ export default function Navbar({ darkMode, setDarkMode }: NavbarProps) {
     <header className="sticky top-0 z-50 px-4 pt-6">
       <div className="relative mb-8 overflow-hidden rounded-[32px] border border-black/10 bg-white/65 px-8 py-6 shadow-2xl backdrop-blur-2xl transition-colors duration-300 dark:border-white/15 dark:bg-white/[0.08]">
         <div className="flex items-center justify-between gap-6">
-          {/* LEFT */}
-          <div className="flex items-center gap-5">
-            <div className="rounded-2xl border border-black/10 bg-white/70 p-2 shadow-lg dark:border-white/10 dark:bg-white/10">
-              <img
-                src="https://i.imgur.com/p9iUQfo.png"
-                alt="LazyJobSeeker Logo"
-                className="h-16 w-16 object-contain"
-              />
+          {/* LEFT: Running Text */}
+          <div className="flex-1 overflow-hidden mr-6 flex items-center">
+            <style>{`
+              @keyframes marquee {
+                from { transform: translateX(50vw); }
+                to { transform: translateX(-100%); }
+              }
+              .animate-marquee-container {
+                display: flex;
+                overflow: hidden;
+                width: 100%;
+              }
+              .animate-marquee-text {
+                white-space: nowrap;
+                animation: marquee 12s linear infinite;
+              }
+            `}</style>
+            <div className="animate-marquee-container">
+              <p className="animate-marquee-text text-xl font-bold tracking-wide text-slate-900 transition-colors duration-300 dark:text-white">
+                welcome to Lazora {username ? username : ''}
+              </p>
             </div>
-
-            <p className="text-xl font-bold tracking-wide text-slate-900 transition-colors duration-300 dark:text-white">
-              LAZORA
-            </p>
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-4">
-            {username && (
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 hidden sm:inline-block">
-                Hi, {username}
-              </span>
-            )}
+          <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
               onClick={() => setDarkMode(!darkMode)}
-              className="rounded-full border border-black/10 bg-white/70 px-5 py-2 text-sm font-medium text-slate-900 shadow-md backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+              className="rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs font-medium text-slate-900 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
             >
               {darkMode ? '☀️ Light' : '🌙 Dark'}
             </button>
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-full border border-red-200 bg-red-50 px-5 py-2 text-sm font-medium text-red-600 shadow-md backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
+              className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-600 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
             >
               Log out
             </button>
