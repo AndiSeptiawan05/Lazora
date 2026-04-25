@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import pdfParse from 'pdf-parse';
 
 const groq = new OpenAI({
   apiKey: process.env.GROQ_API_KEY,
@@ -8,6 +9,21 @@ const groq = new OpenAI({
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API_URL = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
+
+function extractJson(text: string) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+
+    try {
+      return JSON.parse(match[0]);
+    } catch {
+      return null;
+    }
+  }
+}
 
 function getSystemPrompt(mode: string) {
   switch (mode) {
@@ -162,18 +178,91 @@ export async function POST(request: Request) {
 
     const { message } = body;
     const chatId = message.chat.id;
-    const text = message.text;
+    let text = message.text || message.caption || '';
+    
+    // Detect mode
+    let mode = 'chat';
+    if (message.document) {
+      mode = 'analyzer'; // Default mode for documents
+    }
+    
+    // Parse commands to override mode
+    if (text.includes('/ats')) {
+      mode = 'ats';
+      text = text.replace('/ats', '').trim();
+    } else if (text.includes('/analyzer')) {
+      mode = 'analyzer';
+      text = text.replace('/analyzer', '').trim();
+    } else if (text.includes('/cover')) {
+      mode = 'cover';
+      text = text.replace('/cover', '').trim();
+    } else if (text.includes('/chat')) {
+      mode = 'chat';
+      text = text.replace('/chat', '').trim();
+    }
 
-    // Only process text messages
-    if (!text) {
+    let extractedText = '';
+
+    // Handle document upload
+    if (message.document) {
+      const fileId = message.document.file_id;
+      const fileName = message.document.file_name || '';
+      const mimeType = message.document.mime_type || '';
+
+      // Get file path from Telegram
+      const fileRes = await fetch(`${TELEGRAM_API_URL}/getFile?file_id=${fileId}`);
+      const fileData = await fileRes.json();
+
+      if (fileData.ok && fileData.result.file_path) {
+        const filePath = fileData.result.file_path;
+        const downloadUrl = `https://api.telegram.org/file/bot${TELEGRAM_TOKEN}/${filePath}`;
+        
+        const docRes = await fetch(downloadUrl);
+        const arrayBuffer = await docRes.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+
+        if (mimeType.includes('pdf') || fileName.endsWith('.pdf')) {
+          const parsed = await pdfParse(buffer);
+          extractedText += `\n\nDocument Name: ${fileName}\n\n${parsed.text}\n`;
+        } else if (mimeType.includes('text') || fileName.endsWith('.txt')) {
+          const textContent = buffer.toString('utf-8');
+          extractedText += `\n\nDocument Name: ${fileName}\n\n${textContent}\n`;
+        } else {
+          // Unsupported format
+          await fetch(`${TELEGRAM_API_URL}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: "Maaf, format dokumen tidak didukung. Harap unggah PDF atau file teks (.txt).",
+            }),
+          });
+          return NextResponse.json({ ok: true });
+        }
+      }
+    }
+
+    // Only process if there's text or a parsed document
+    if (!text && !extractedText) {
       return NextResponse.json({ ok: true });
     }
 
     // Prepare messages for Groq
+    const systemPrompt = getSystemPrompt(mode);
     const messages = [
-      { role: 'system' as const, content: getSystemPrompt('chat') },
-      { role: 'user' as const, content: text },
+      { role: 'system' as const, content: systemPrompt },
     ];
+
+    if (text) {
+      messages.push({ role: 'user' as const, content: text });
+    }
+
+    if (extractedText) {
+      messages.push({
+        role: 'user' as const,
+        content: 'Gunakan dokumen berikut sebagai referensi utama:\n' + extractedText,
+      });
+    }
 
     // Get response from Groq
     const completion = await groq.chat.completions.create({
@@ -182,9 +271,19 @@ export async function POST(request: Request) {
       temperature: 0.3,
     });
 
-    const replyText =
+    const rawContent =
       completion.choices?.[0]?.message?.content ||
       'Maaf, saya sedang tidak bisa merespons saat ini.';
+
+    let replyText = rawContent;
+
+    // Extract JSON for ATS, Analyzer, Cover modes to avoid sending raw JSON to Telegram
+    if (mode === 'ats' || mode === 'analyzer' || mode === 'cover') {
+      const parsedJson = extractJson(rawContent);
+      if (parsedJson && parsedJson.ats_report) {
+        replyText = parsedJson.ats_report;
+      }
+    }
 
     // Send the reply back to Telegram
     await fetch(`${TELEGRAM_API_URL}/sendMessage`, {
