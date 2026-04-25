@@ -37,7 +37,7 @@ export default function HomePage() {
     } else {
       document.documentElement.classList.remove('dark')
     }
-    
+
     const user = localStorage.getItem('username')
     if (!user) {
       router.push('/')
@@ -85,15 +85,21 @@ export default function HomePage() {
         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
         <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-6 pt-2">
-          {/* TOOLS 3 KOLOM */}
-          <section className="grid gap-6 lg:grid-cols-[2fr_2fr_1fr]">
-            <Chat />
-            <JpgToPdf />
-            <MergeCvDocuments />
+          {/* 2-COLUMN LAYOUT */}
+          <section className="grid gap-6 lg:grid-cols-2">
+            {/* Left Column */}
+            <div className="flex flex-col h-full w-full min-h-[500px]">
+              <Chat />
+            </div>
+            {/* Right Column */}
+            <div className="flex flex-col gap-6 h-full w-full">
+              <JpgToPdf />
+              <MergeCvDocuments />
+            </div>
           </section>
 
           {/* HERO BRANDING DI BAWAH */}
-          <section className="relative mx-auto mt-8 overflow-hidden rounded-[32px] border border-black/10 bg-white/70 p-8 shadow-2xl backdrop-blur-2xl transition-colors duration-300 dark:border-white/15 dark:bg-white/[0.08]">
+          <section className="relative mx-auto mt-8 overflow-hidden rounded-[32px] border border-black/10 bg-white/20 p-8 shadow-2xl backdrop-blur-1xl transition-colors duration-300 dark:border-white/15 dark:bg-white/[0.08]">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0097b2]/10 via-white/[0.03] to-transparent" />
 
             <div className="relative mx-auto text-center">

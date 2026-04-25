@@ -460,7 +460,7 @@ export default function Chat() {
   }
 
   return (
-    <div className="rounded-3xl border border-black/10 bg-white/70 p-5 shadow-2xl backdrop-blur-2xl transition-colors duration-300 dark:border-white/20 dark:bg-white/10">
+    <div className="rounded-3xl border border-black/10 bg-white/20 p-5 shadow-2xl backdrop-blur-1xl transition-colors duration-300 dark:border-white/20 dark:bg-white/10">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <img

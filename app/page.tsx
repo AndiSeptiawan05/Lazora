@@ -75,16 +75,17 @@ export default function LoginPage() {
       <div className="w-full max-w-sm sm:max-w-md md:max-w-5xl transition-colors duration-300 z-10 flex flex-col md:flex-row gap-6 md:gap-8">
 
         {/* Left Column: Branding / Logo */}
-        <div className="flex-1 p-8 md:p-12 flex flex-col justify-center items-center">
+        <div className="flex-1 p-2 md:p-1 flex flex-col justify-center items-center">
           <img
-            src="https://i.imgur.com/k08TR9i.png"
+            src="https://i.imgur.com/VFPHkzG.png"
             alt="Lazora Logo"
-            className="w-56 md:w-72 object-contain mb-6 drop-shadow-sm"
+            className="w-36 md:w-60 object-contain drop-shadow-sm z-10"
           />
-          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-wide text-center">
-            Let's Start Your Journey!
-
-          </h1>
+          <img
+            src="https://i.imgur.com/2kWsGZG.png"
+            alt="Let's Start Your Journey"
+            className="w-80 md:w-140 object-contain drop-shadow-sm -mt-0.1 z-0"
+          />
         </div>
 
         {/* Right Column: Form */}
@@ -107,7 +108,7 @@ export default function LoginPage() {
                   id="username"
                   type="text"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-600 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -133,7 +134,7 @@ export default function LoginPage() {
                   id="password"
                   type="password"
                   required
-                  className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-transparent border border-black dark:border-[#4a4b50] rounded-lg text-gray-900 dark:text-[#f8f9fa] placeholder-gray-600 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600/20 focus:border-red-600 dark:focus:border-red-500 transition-all"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
