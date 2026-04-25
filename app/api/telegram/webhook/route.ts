@@ -249,7 +249,7 @@ export async function POST(request: Request) {
 
     // Prepare messages for Groq
     const systemPrompt = getSystemPrompt(mode);
-    const messages = [
+    const messages: any[] = [
       { role: 'system' as const, content: systemPrompt },
     ];
 
